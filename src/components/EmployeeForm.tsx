@@ -1,18 +1,44 @@
-import React, { useState } from 'react';
-import { Button, Card, CardContent, CardHeader, TextField, FormControl, InputLabel, Select, MenuItem, Switch, LinearProgress, Typography } from '@mui/material';
-import Grid from '@mui/material/Grid';
-import { CheckCircle2 } from 'lucide-react';
-import type { EmployeeFormData, FormStep } from '@/types/employee';
-import { useToast } from '@/hooks/use-toast';
+import React, { useState } from "react";
+import {
+  Button,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Switch,
+  Typography,
+  Box,
+  Grid,
+} from "@mui/material";
+import type { EmployeeFormData, FormStep } from "@/types/employee";
+import { useToast } from "@/hooks/use-toast";
+import { ChevronRight, Users, Dot } from "lucide-react";
+import LinearProgressWithLabel from "./LinearProgressWithLabel";
 
 const departments = [
-  'Design', 'TI', 'Marketing', 'Produto', 'Vendas', 'RH', 'Financeiro'
+  "Design",
+  "TI",
+  "Marketing",
+  "Produto",
+  "Vendas",
+  "RH",
+  "Financeiro",
 ];
 
-export function EmployeeForm({ onSubmit, onCancel }: { onSubmit: (data: EmployeeFormData) => void; onCancel: () => void; }) {
-  const [currentStep, setCurrentStep] = useState<FormStep>('basic');
+export function EmployeeForm({
+  onSubmit,
+  onCancel,
+}: {
+  onSubmit: (data: EmployeeFormData) => void;
+  onCancel: () => void;
+}) {
+  const [currentStep, setCurrentStep] = useState<FormStep>("basic");
   const [formData, setFormData] = useState<EmployeeFormData>({
-    name: '', email: '', department: '', activeOnCreate: true
+    name: "",
+    email: "",
+    department: "",
+    activeOnCreate: true,
   });
   const [errors, setErrors] = useState<Partial<EmployeeFormData>>({});
   const { toast } = useToast();
@@ -20,14 +46,17 @@ export function EmployeeForm({ onSubmit, onCancel }: { onSubmit: (data: Employee
   const validateBasicInfo = (): boolean => {
     const newErrors: Partial<EmployeeFormData> = {};
 
-    if (!formData.name.trim()) newErrors.name = 'Nome é obrigatório';
-    else if (formData.name.length < 3) newErrors.name = 'Nome deve ter pelo menos 3 caracteres';
-    else if (!/^[a-zA-Z\s]+$/.test(formData.name)) newErrors.name = 'Nome deve conter apenas letras e espaços';
+    if (!formData.name.trim()) newErrors.name = "Nome é obrigatório";
+    else if (formData.name.length < 3)
+      newErrors.name = "Nome deve ter pelo menos 3 caracteres";
+    else if (!/^[a-zA-Z\s]+$/.test(formData.name))
+      newErrors.name = "Nome deve conter apenas letras e espaços";
 
-    if (!formData.email.trim()) newErrors.email = 'E-mail é obrigatório';
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = 'E-mail inválido';
+    if (!formData.email.trim()) newErrors.email = "E-mail é obrigatório";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
+      newErrors.email = "E-mail inválido";
 
-    setErrors(prevErrors => ({
+    setErrors((prevErrors) => ({
       ...prevErrors,
       name: newErrors.name,
       email: newErrors.email,
@@ -38,26 +67,26 @@ export function EmployeeForm({ onSubmit, onCancel }: { onSubmit: (data: Employee
 
   const validateProfessionalInfo = (): boolean => {
     const newErrors: Partial<EmployeeFormData> = {};
-    
+
     if (!formData.department.trim()) {
-      newErrors.department = 'Departamento é obrigatório';
+      newErrors.department = "Departamento é obrigatório";
     }
 
-    setErrors(prevErrors => ({
+    setErrors((prevErrors) => ({
       ...prevErrors,
       department: newErrors.department,
     }));
 
     return Object.keys(newErrors).length === 0;
   };
-  
+
   const updateFormData = (field: keyof EmployeeFormData, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
-  
+
   const handleNext = () => {
     if (validateBasicInfo()) {
-      setCurrentStep('professional');
+      setCurrentStep("professional");
     }
   };
 
@@ -69,303 +98,202 @@ export function EmployeeForm({ onSubmit, onCancel }: { onSubmit: (data: Employee
 
     if (isBasicInfoValid && isProfessionalInfoValid) {
       toast({
-          title: "Sucesso!",
-          description: "Funcionário cadastrado.",
+        title: "Sucesso!",
+        description: "Funcionário cadastrado.",
       });
       onSubmit(formData);
     } else {
       toast({
-          title: "Erro de Validação",
-          description: "Por favor, corrija os campos com erro.",
-          variant: "destructive",
+        title: "Erro de Validação",
+        description: "Por favor, corrija os campos com erro.",
+        variant: "destructive",
       });
     }
   };
 
   return (
-    <Grid
-      container
-      minHeight="80vh"
-      alignItems="center"
-      justifyContent="center"
-      px={{ xs: 1, sm: 2, md: 3 }}
-    >
-      <Grid item xs={12} sm={10} md={8} lg={6}>
-        <Grid container spacing={2} alignItems="flex-start">
-          {/* Barra lateral */}
-          <Grid item xs={12} md={4}>
-            <Grid style={{ minWidth: 350 }} container direction="column" spacing={2}>
-              <Grid item>
-                <Grid
-                  container
-                  alignItems="center"
-                  spacing={2}
-                  p={2}
-                  borderRadius={2}
-                  sx={{
-                    bgcolor: currentStep === 'basic' ? 'success.main' : 'grey.200',
-                    color: currentStep === 'basic' ? 'success.contrastText' : 'text.secondary',
-                  }}
-                >
-                  <Grid item>
-                    {currentStep === 'professional' ? (
-                      <CheckCircle2
-                        style={{ width: 20, height: 20, color: '#4caf50' }}
-                      />
-                    ) : (
-                      <span
-                        style={{
-                          width: 20,
-                          height: 20,
-                          borderRadius: '50%',
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontWeight: 500,
-                          fontSize: 14,
-                        }}
-                      >
-                        1
-                      </span>
-                    )}
-                  </Grid>
-                  <Grid item>
-                    <Typography fontWeight={500} fontSize={{ xs: 15, md: 16 }}>
-                      Infos Básicas
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item>
-                <Grid
-                  container
-                  alignItems="center"
-                  spacing={2}
-                  p={2}
-                  borderRadius={2}
-                  sx={{
-                    bgcolor: currentStep === 'professional' ? 'success.main' : 'grey.200',
-                    color: currentStep === 'professional' ? 'success.contrastText' : 'text.secondary',
-                  }}
-                >
-                  <Grid item>
-                    <span
-                      style={{
-                        width: 20,
-                        height: 20,
-                        borderRadius: '50%',
-                        background: 'currentColor',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontWeight: 500,
-                        fontSize: 14,
-                      }}
-                    >
-                      2
-                    </span>
-                  </Grid>
-                  <Grid item>
-                    <Typography fontWeight={500} fontSize={{ xs: 15, md: 16 }}>
-                      Infos Profissionais
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
+    // Aba da esquerda
+    <Grid container sx={{p:3}}>
+      <Grid size={3}>
+        <Box display={"inline-flex"} alignItems="center" gap={1} mb={2} mt={4}>
+          <Users style={{ width: 22, height: 22 }} />
+          <Typography variant="body1" fontSize={{ xs: 16, sm: 18 }}>
+            Colaboradores
+          </Typography>
+          <ChevronRight style={{ width: 18, height: 18 }} />
+        </Box>
+      </Grid>
 
-          {/* Conteúdo principal */}
-          <Grid item xs={12} md={8}>
-            <LinearProgress
-              variant="determinate"
-              value={currentStep === 'basic' ? 50 : 100}
-              sx={{ mb: 2, height: 8, borderRadius: 4 }}
-            />
-            <Card
-              sx={{
-                mt: { xs: 2, md: 0 },
-                boxShadow: 3,
-                minHeight: 400,
-                minWidth: { xs: 350, sm: 450, md: 500 },
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
-              <CardHeader
-                title={
-                  <Typography variant="h6" fontSize={{ xs: 17, md: 20 }}>
-                    {currentStep === 'basic'
-                      ? 'Informações Básicas'
-                      : 'Informações Profissionais'}
+      {/* Aba da direita */}
+      {/* vou colocar tido no centro da tela */}
+      <Grid size={8}>
+        {/* TO DO: MUDAR COR DO BACKGROUND */}
+        {/* Breadcrumb */}
+        <Box display="flex" alignItems="center" gap={1} mb={0} mt={4}>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ cursor: "pointer", fontWeight: 600 }}
+            onClick={() => onCancel()}
+          >
+            Colaboradores
+          </Typography>
+          <Dot style={{ width: 25, height: 25, color: "#bdbdbd" }} />
+          <Typography variant="body2" color="text.secondary">
+            Cadastrar Colaborador
+          </Typography>
+        </Box>
+        <LinearProgressWithLabel
+          variant="determinate"
+          color="success"
+          value={currentStep === "basic" ? 0 : 50}
+          sx={{ mb: 2, height: 6, borderRadius: 4 }}
+        />
+
+        {/* TO DO: MUDAR FONTE E CORES */}
+        <Typography
+          variant="h6"
+          fontSize={{ xs: 17, md: 20 }}
+          sx={{ fontWeight: 600, mt: 2 }}
+        >
+          {currentStep === "basic"
+            ? "Informações Básicas"
+            : "Informações Profissionais"}
+        </Typography>
+
+        <form
+          onSubmit={handleSubmit}
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+          }}
+        >
+          {currentStep === "basic" ? (
+            <>
+              <div>
+                <FormControl fullWidth margin="normal">
+                  <TextField
+                    id="name"
+                    value={formData.name}
+                    onChange={(e) => updateFormData("name", e.target.value)}
+                    placeholder="João da Silva"
+                    error={!!errors.name}
+                    helperText={errors.name}
+                    variant="outlined"
+                    label="Nome"
+                    color="success"
+                    // to do: mudar inputProps para sx, para poder mudar a cor do field
+                    inputProps={{ style: { fontSize: 15 } }}
+                  />
+                </FormControl>
+                <FormControl fullWidth margin="normal">
+                  <TextField
+                    id="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => updateFormData("email", e.target.value)}
+                    placeholder="nome@exemplo.com"
+                    error={!!errors.email}
+                    helperText={errors.email}
+                    variant="outlined"
+                    label="E-mail"
+                    color="success"
+                    // to do: mudar inputProps para sx, para poder mudar a cor do field
+                    inputProps={{ style: { fontSize: 15 } }}
+                  />
+                </FormControl>
+              </div>
+              {/* TO DO: MUDAR COR DO SWITCH */}
+              <FormControl fullWidth margin="normal">
+                <Box display="flex" alignItems="center">
+                  <Switch
+                    checked={formData.activeOnCreate}
+                    onChange={(e) =>
+                      updateFormData("activeOnCreate", e.target.checked)
+                    }
+                    color="success"
+                  />
+                  <Typography variant="body2">
+                    Ativar colaborador ao criar
                   </Typography>
-                }
-              />
-              <CardContent
-                sx={{
-                  flex: 1,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <form
-                  onSubmit={handleSubmit}
-                  style={{
-                    flex: 1,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
+                </Box>
+              </FormControl>
+
+              {/* TO DO: Mudar botões de lugar e propriedades de cor */}
+              <Box mt={4} display="flex" justifyContent="space-between">
+                <Button
+                  variant="text"
+                  color="inherit"
+                  onClick={() => onCancel()}
+                  sx={{
+                    textAlign: "left",
+                    ":hover": { backgroundColor: "transparent" },
                   }}
                 >
-                  {currentStep === 'basic' ? (
-                    <>
-                      <div>
-                        <FormControl fullWidth margin="normal">
-                          <TextField
-                            id="name"
-                            value={formData.name}
-                            onChange={(e) =>
-                              updateFormData('name', e.target.value)
-                            }
-                            placeholder="João da Silva"
-                            error={!!errors.name}
-                            helperText={errors.name}
-                            variant="outlined"
-                            label="Nome"
-                            inputProps={{ style: { fontSize: 15 } }}
-                          />
-                        </FormControl>
-                        <FormControl fullWidth margin="normal">
-                          <TextField
-                            id="email"
-                            type="email"
-                            value={formData.email}
-                            onChange={(e) =>
-                              updateFormData('email', e.target.value)
-                            }
-                            placeholder="nome@exemplo.com"
-                            error={!!errors.email}
-                            helperText={errors.email}
-                            variant="outlined"
-                            label="E-mail"
-                            inputProps={{ style: { fontSize: 15 } }}
-                          />
-                        </FormControl>
-                        <Grid
-                          container
-                          alignItems="center"
-                          justifyContent="space-between"
-                          mt={2}
-                          mb={2}
-                        >
-                          <Grid item>
-                            <Typography fontSize={{ xs: 15, md: 16 }}>
-                              Ativar ao criar
-                            </Typography>
-                          </Grid>
-                          <Grid item>
-                            <Switch
-                              checked={formData.activeOnCreate}
-                              onChange={(e) =>
-                                updateFormData('activeOnCreate', e.target.checked)
-                              }
-                              color="success"
-                              sx={{
-                                transform: { xs: 'scale(0.9)', md: 'none' },
-                              }}
-                            />
-                          </Grid>
-                        </Grid>
-                      </div>
-
-                      <Grid container spacing={2} pt={2}>
-                        <Grid item xs={12} sm={6}>
-                          <Button
-                            variant="outlined"
-                            onClick={onCancel}
-                            type="button"
-                            color="success"
-                            fullWidth
-                          >
-                            Cancelar
-                          </Button>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                          <Button
-                            variant="contained"
-                            onClick={handleNext}
-                            type="button"
-                            color="success"
-                            fullWidth
-                          >
-                            Próximo
-                          </Button>
-                        </Grid>
-                      </Grid>
-                    </>
-                  ) : (
-                    <>
-                      <div>
-                        <FormControl fullWidth margin="normal">
-                          <InputLabel id="department-label">Departamento</InputLabel>
-                          <Select
-                            labelId="department-label"
-                            id="department"
-                            value={formData.department}
-                            onChange={(e) =>
-                              updateFormData('department', e.target.value as string)
-                            }
-                            error={!!errors.department}
-                            label="Departamento"
-                            sx={{ fontSize: 15 }}
-                          >
-                            {departments.map((dep) => (
-                              <MenuItem
-                                key={dep}
-                                value={dep}
-                                sx={{ fontSize: 15 }}
-                              >
-                                {dep}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                          {}
-                          {errors.department && <Typography color="error" variant="caption" sx={{ pl: 2, pt: 1 }}>{errors.department}</Typography>}
-                        </FormControl>
-                      </div>
-
-                      <Grid container spacing={2} pt={2}>
-                        <Grid item xs={12} sm={6}>
-                          <Button
-                            variant="outlined"
-                            onClick={() => setCurrentStep('basic')}
-                            type="button"
-                            color="success"
-                            fullWidth
-                          >
-                            Voltar
-                          </Button>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                          <Button
-                            variant="contained"
-                            onClick={handleSubmit}
-                            type="submit"
-                            color="success"
-                            fullWidth
-                          >
-                            Salvar
-                          </Button>
-                        </Grid>
-                      </Grid>
-                    </>
+                  Voltar
+                </Button>
+                <Button
+                  variant="contained"
+                  color="success"
+                  onClick={handleNext}
+                  sx={{ padding: "10px" }}
+                >
+                  Próximo
+                </Button>
+              </Box>
+            </>
+          ) : (
+            <>
+              <div>
+                <FormControl fullWidth margin="normal">
+                  <InputLabel id="department-label">Departamento</InputLabel>
+                  <Select
+                    labelId="department-label"
+                    id="department"
+                    value={formData.department}
+                    label="Departamento"
+                    //mudar a cor do label
+                    onChange={(e) =>
+                      updateFormData("department", e.target.value)
+                    }
+                    color="success"
+                    error={!!errors.department}
+                  >
+                    {departments.map((dept) => (
+                      <MenuItem key={dept} value={dept}>
+                        {dept}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {errors.department && (
+                    <Typography color="error" variant="caption">
+                      {errors.department}
+                    </Typography>
                   )}
-                </form>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
+                </FormControl>
+              </div>
+              {/* TODO: fonte dos botões e titulos sem upcase */}
+              <Box mt={2} display="flex" justifyContent="space-between">
+                <Button
+                  variant="text"
+                  color="inherit"
+                  onClick={() => setCurrentStep("basic")}
+                  sx={{
+                    textAlign: "left",
+                    ":hover": { backgroundColor: "transparent" },
+                  }}
+                >
+                  Voltar
+                </Button>
+                <Button type="submit" variant="contained" color="success" sx={{ padding: "10px" }}>
+                  Finalizar
+                </Button>
+              </Box>
+            </>
+          )}
+        </form>
       </Grid>
     </Grid>
   );
