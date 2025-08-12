@@ -76,20 +76,19 @@ export default function EmployeeList({ employees, onAddEmployee }: EmployeeListP
             </Avatar>
           </Grid>
           <Grid size={12} display={{ xs: 'block', sm: 'flex' }} flexDirection={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems={{ xs: 'flex-start', sm: 'center' }} sx={{ p: 2, }}>
-            <Typography variant="h4" fontWeight={600} textAlign={"center"} mb={{ xs: 2, sm: 0 }}>
+            <Typography variant="h5" fontWeight={600} textAlign={"center"} mb={{ xs: 2, sm: 0 }} color='black'>
               Colaboradores
             </Typography>
             <Button
               variant="contained"
-              color="success"
               onClick={onAddEmployee}
-              sx={{ width: { xs: '100%', sm: 'auto' } }}
+              sx={{ width: { xs: '100%', sm: 'auto', backgroundColor: '#2E7D32' } }}
             >
               Novo Colaborador
             </Button>
           </Grid>
           <Card sx={{ mr: 2, width: { xs: '100%', sm: 'auto' } }}>
-            <CardContent sx={{ p: 2 }}>
+            <CardContent sx={{ p: 0, borderRadius: 4 }}>
               {employees.length === 0 ? (
                 <Grid
                   container
@@ -111,7 +110,7 @@ export default function EmployeeList({ employees, onAddEmployee }: EmployeeListP
                 <Grid size={12} sx={{ overflowX: 'auto' }}>
                   <table style={{ width: '100%', borderCollapse: 'collapse', padding: 10 }}>
                     <thead>
-                      <tr>
+                      <tr style={{ backgroundColor: '#f3f4f6', borderBottom: '1px solid #e5e7eb', whiteSpace: 'nowrap' }}>
                         <th
                           onClick={() => handleSort('name')}
                           style={{ textAlign: 'left', padding: '12px 16px', color: '#6B7280', cursor: 'pointer', userSelect: 'none' }}
@@ -160,7 +159,7 @@ export default function EmployeeList({ employees, onAddEmployee }: EmployeeListP
                         <tr key={employee.id} style={{ borderTop: '1px solid #e5e7eb' }}>
                           <td style={{ padding: '12px 16px' }}>
                             <Box display="flex" alignItems="center" gap={2}>
-                              <Avatar sx={{ width: 32, height: 32, bgcolor: '#10B981', color: '#fff', fontSize: '0.875rem', fontWeight: 600 }}>
+                              <Avatar sx={{ width: 32, height: 32, bgcolor: '#2E7D32', color: '#fff', fontSize: '0.875rem', fontWeight: 600 }}>
                                 {getInitials(employee.name)}
                               </Avatar>
                               <Typography variant="body2" fontWeight={500}>{employee.name}</Typography>
@@ -190,8 +189,6 @@ export default function EmployeeList({ employees, onAddEmployee }: EmployeeListP
           </Card>
         </Grid>
       </Grid>
-
-      {/* Tabela de Colaboradores dentro de um Card */}
     </Grid>
   );
 }
