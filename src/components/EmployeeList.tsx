@@ -10,7 +10,7 @@ import {
   Grid,
 } from '@mui/material';
 import Drawer from "./Drawer";
-import GroupIcon from '@mui/icons-material/Group';
+import GroupsIcon from '@mui/icons-material/Groups';
 import type { Employee } from '@/types/employee';
 
 interface EmployeeListProps {
@@ -62,7 +62,7 @@ export default function EmployeeList({ employees, onAddEmployee }: EmployeeListP
                   justifyContent="center"
                   py={{ xs: 4, sm: 8 }}
                 >
-                  <GroupIcon style={{ width: 48, height: 64, color: '#bdbdbd', marginBottom: '24px' }} />
+                  <GroupsIcon style={{ width: 48, height: 64, color: '#bdbdbd', marginBottom: '24px' }} />
                   <Typography variant="h6" fontWeight={500} mb={1}>
                     Nenhum colaborador cadastrado
                   </Typography>

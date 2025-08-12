@@ -12,7 +12,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import GroupIcon from '@mui/icons-material/Group';
+import GroupsIcon from '@mui/icons-material/Groups';
 
 const drawerWidth = 240;
 
@@ -101,7 +101,7 @@ export default function PersistentDrawerLeft() {
                     <ListItem key={"Colaboradores"} disablePadding sx={{ display: 'block' }}>
                         <ListItemButton>
                             <ListItemIcon>
-                                <GroupIcon />
+                                <GroupsIcon />
                             </ListItemIcon>
                             <ListItemText primary={"Colaboradores"} /><ChevronRightIcon />
                         </ListItemButton>
