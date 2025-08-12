@@ -10,7 +10,11 @@ import {
   Typography,
   Box,
   Grid,
+  Stepper,
+  Step,
+  StepLabel
 } from "@mui/material";
+
 import type { EmployeeFormData, FormStep } from "@/types/employee";
 import { useToast } from "@/hooks/use-toast";
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
@@ -111,15 +115,17 @@ export default function EmployeeForm({
       });
     }
   };
+  const steps = ["Infos Básicas", "Infos Profissionais"];
 
   return (
     // Aba da esquerda
     <Grid container sx={{ p: 3 }}>
-      <Grid size={3}>
+      <Grid size={3} sx={{ display: { xs: 'none', sm: 'block' } }}>
         <Drawer />
       </Grid>
+
       {/* Aba da direita */}
-      <Grid size={8}>
+      <Grid size={9}>
         {/* TO DO: MUDAR COR DO BACKGROUND */}
         {/* Breadcrumb */}
         <Box display="flex" alignItems="center" gap={1} mb={0} mt={4}>
@@ -138,36 +144,66 @@ export default function EmployeeForm({
         </Box>
         <LinearProgressWithLabel
           variant="determinate"
-          color="success"
           value={currentStep === "basic" ? 0 : 50}
+          color="success"
           sx={{ mb: 2, height: 6, borderRadius: 4 }}
         />
-
         {/* TO DO: MUDAR FONTE E CORES */}
-        <Typography
-          variant="h6"
-          fontSize={{ xs: 17, md: 20 }}
-          sx={{ fontWeight: 600, mt: 2 }}
-        >
-          {currentStep === "basic"
-            ? "Informações Básicas"
-            : "Informações Profissionais"}
-        </Typography>
+        <Grid container spacing={4} alignItems="flex-start">
+          {/* Stepper */}
+          <Grid size={2}>
+            <Stepper
+              activeStep={currentStep === "basic" ? 0 : 1}
+              orientation="vertical"
+              sx={{
+                mb: 3,
+                "& .MuiStepIcon-root": {
+                  color: "success.main", // etapas não ativas
+                },
+                "& .MuiStepIcon-root.Mui-active": {
+                  color: "success.main", // etapa ativa
+                },
+                "& .MuiStepIcon-root.Mui-completed": {
+                  color: "success.main", // etapas concluídas
+                },
+                "& .MuiStepLabel-label": {
+                  color: "grey.700", // texto
+                  fontWeight: 500,
+                },
+              }}
+            >
+              {steps.map((label) => (
+                <Step key={label}>
+                  <StepLabel>{label}</StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+          </Grid>
 
-        <form
-          onSubmit={handleSubmit}
-          style={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-          }}
-        >
-          {currentStep === "basic" ? (
-            <>
-              <div>
-                <FormControl fullWidth margin="normal">
+          {/* Conteúdo */}
+          <Grid size={9} >
+            <Typography
+              variant="h6"
+              fontSize={{ xs: 17, md: 20 }}
+              sx={{ fontWeight: 600, mb: 2 }}
+            >
+              {currentStep === "basic"
+                ? "Informações Básicas"
+                : "Informações Profissionais"}
+            </Typography>
+
+            <form
+              onSubmit={handleSubmit}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "16px",
+              }}
+            >
+              {currentStep === "basic" ? (
+                <>
                   <TextField
+                    fullWidth
                     id="name"
                     value={formData.name}
                     onChange={(e) => updateFormData("name", e.target.value)}
@@ -175,118 +211,114 @@ export default function EmployeeForm({
                     error={!!errors.name}
                     helperText={errors.name}
                     variant="outlined"
-                    label="Nome"
+                    label="Título"
                     color="success"
-                    // to do: mudar inputProps para sx, para poder mudar a cor do field
-                    inputProps={{ style: { fontSize: 15 } }}
                   />
-                </FormControl>
-                <FormControl fullWidth margin="normal">
+
                   <TextField
+                    fullWidth
                     id="email"
                     type="email"
                     value={formData.email}
                     onChange={(e) => updateFormData("email", e.target.value)}
-                    placeholder="nome@exemplo.com"
+                    placeholder="e.g. john@gmail.com"
                     error={!!errors.email}
                     helperText={errors.email}
                     variant="outlined"
                     label="E-mail"
                     color="success"
-                    // to do: mudar inputProps para sx, para poder mudar a cor do field
-                    inputProps={{ style: { fontSize: 15 } }}
                   />
-                </FormControl>
-              </div>
-              {/* TO DO: MUDAR COR DO SWITCH */}
-              <FormControl fullWidth margin="normal">
-                <Box display="flex" alignItems="center">
-                  <Switch
-                    checked={formData.activeOnCreate}
-                    onChange={(e) =>
-                      updateFormData("activeOnCreate", e.target.checked)
-                    }
-                    color="success"
-                  />
-                  <Typography variant="body2">
-                    Ativar colaborador ao criar
-                  </Typography>
-                </Box>
-              </FormControl>
 
-              {/* TO DO: Mudar botões de lugar e propriedades de cor */}
-              <Box mt={4} display="flex" justifyContent="space-between">
-                <Button
-                  variant="text"
-                  color="inherit"
-                  onClick={() => onCancel()}
-                  sx={{
-                    textAlign: "left",
-                    ":hover": { backgroundColor: "transparent" },
-                  }}
-                >
-                  Voltar
-                </Button>
-                <Button
-                  variant="contained"
-                  color="success"
-                  onClick={handleNext}
-                  sx={{ padding: "10px" }}
-                >
-                  Próximo
-                </Button>
-              </Box>
-            </>
-          ) : (
-            <>
-              <div>
-                <FormControl fullWidth margin="normal">
-                  <InputLabel id="department-label">Departamento</InputLabel>
-                  <Select
-                    labelId="department-label"
-                    id="department"
-                    value={formData.department}
-                    label="Departamento"
-                    //mudar a cor do label
-                    onChange={(e) =>
-                      updateFormData("department", e.target.value)
-                    }
-                    color="success"
-                    error={!!errors.department}
-                  >
-                    {departments.map((dept) => (
-                      <MenuItem key={dept} value={dept}>
-                        {dept}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  {errors.department && (
-                    <Typography color="error" variant="caption">
-                      {errors.department}
-                    </Typography>
-                  )}
-                </FormControl>
-              </div>
-              {/* TODO: fonte dos botões e titulos sem upcase */}
-              <Box mt={2} display="flex" justifyContent="space-between">
-                <Button
-                  variant="text"
-                  color="inherit"
-                  onClick={() => setCurrentStep("basic")}
-                  sx={{
-                    textAlign: "left",
-                    ":hover": { backgroundColor: "transparent" },
-                  }}
-                >
-                  Voltar
-                </Button>
-                <Button type="submit" variant="contained" color="success" sx={{ padding: "10px" }}>
-                  Finalizar
-                </Button>
-              </Box>
-            </>
-          )}
-        </form>
+                  <Box display="flex" alignItems="center" gap={1}>
+                    <Switch
+                      checked={formData.activeOnCreate}
+                      onChange={(e) =>
+                        updateFormData("activeOnCreate", e.target.checked)
+                      }
+                      color="success"
+                    />
+                    <Typography variant="body2">Ativar ao criar</Typography>
+                  </Box>
+
+                  <Box mt={2} display="flex" justifyContent="space-between">
+                    <Button
+                      variant="text"
+                      color="inherit"
+                      onClick={() => onCancel()}
+                      sx={{
+                        ":hover": { backgroundColor: "transparent" },
+                      }}
+                    >
+                      Voltar
+                    </Button>
+                    <Button
+                      variant="contained"
+                      onClick={handleNext}
+                      sx={{ backgroundColor: "#2E7D32" }}
+                    >
+                      Próximo
+                    </Button>
+                  </Box>
+                </>
+              ) : (
+                <>
+                  <FormControl fullWidth>
+                    <InputLabel
+                      id="department-label"
+                      variant="filled"
+                      color="success"
+                    >
+                      Selecione um Departamento
+                    </InputLabel>
+                    <Select
+                      labelId="department-label"
+                      id="department"
+                      value={formData.department}
+                      onChange={(e) =>
+                        updateFormData("department", e.target.value)
+                      }
+                      color="success"
+                      sx={{ pt: 1 }}
+                      error={!!errors.department}
+                    >
+                      {departments.map((dept) => (
+                        <MenuItem key={dept} value={dept}>
+                          {dept}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    {errors.department && (
+                      <Typography color="error" variant="caption">
+                        {errors.department}
+                      </Typography>
+                    )}
+                  </FormControl>
+
+                  <Box mt={2} display="flex" justifyContent="space-between">
+                    <Button
+                      variant="text"
+                      color="inherit"
+                      onClick={() => setCurrentStep("basic")}
+                      sx={{
+                        ":hover": { backgroundColor: "transparent" },
+                      }}
+                    >
+                      Voltar
+                    </Button>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      sx={{ backgroundColor: "#2E7D32" }}
+                    >
+                      Finalizar
+                    </Button>
+                  </Box>
+                </>
+              )}
+            </form>
+          </Grid>
+        </Grid>
+
       </Grid>
     </Grid>
   );
