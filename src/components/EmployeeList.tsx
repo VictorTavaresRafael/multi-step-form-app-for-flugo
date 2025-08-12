@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Button,
@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import Drawer from "./Drawer";
 import GroupsIcon from '@mui/icons-material/Groups';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import type { Employee } from '@/types/employee';
 
 interface EmployeeListProps {
@@ -19,6 +20,28 @@ interface EmployeeListProps {
 }
 
 export default function EmployeeList({ employees, onAddEmployee }: EmployeeListProps) {
+  const [sortColumn, setSortColumn] = useState<string | null>(null);
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const handleSort = (column: string) => {
+    if (sortColumn === column) {
+      // Alterna entre asc e desc
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortColumn(column);
+      setSortDirection('asc');
+    }
+  };
+  const sortedEmployees = [...employees].sort((a, b) => {
+    if (!sortColumn) return 0;
+
+    const valA = String(a[sortColumn as keyof Employee] || '').toLowerCase();
+    const valB = String(b[sortColumn as keyof Employee] || '').toLowerCase();
+
+    if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
+    if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
+    return 0;
+  });
+
   const getInitials = (name: string) => {
     if (!name) return '';
     return name
@@ -36,9 +59,23 @@ export default function EmployeeList({ employees, onAddEmployee }: EmployeeListP
         <Drawer />
       </Grid>
       <Grid size={10}>
-        <Grid container spacing={2} direction="column" style={{ minHeight: '100vh', background: '#fafafa' }}>
+        <Grid container spacing={2} direction="column" sx={{ width: { xs: '100%', sm: 'auto' } }}>
           {/* Cabeçalho da Seção de Conteúdo */}
-          <Grid size={12} display="flex" flexDirection={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems={{ xs: 'flex-start', sm: 'center' }} sx={{ p: 2 }}>
+          <Grid size={12} sx={{ p: 2, display: 'flex', justifyContent: 'end' }}>
+            <Avatar
+              sx={{
+                display: { xs: 'none', sm: 'flex' },
+                bgcolor: 'green',
+                color: '#fff',
+                width: { xs: 28, sm: 32 },
+                height: { xs: 28, sm: 32 },
+                fontSize: { xs: 16, sm: 18 }
+              }}
+            >
+              <AccountCircleIcon style={{ width: 20, height: 20 }} />
+            </Avatar>
+          </Grid>
+          <Grid size={12} display={{ xs: 'block', sm: 'flex' }} flexDirection={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems={{ xs: 'flex-start', sm: 'center' }} sx={{ p: 2, }}>
             <Typography variant="h4" fontWeight={600} textAlign={"center"} mb={{ xs: 2, sm: 0 }}>
               Colaboradores
             </Typography>
@@ -51,7 +88,7 @@ export default function EmployeeList({ employees, onAddEmployee }: EmployeeListP
               Novo Colaborador
             </Button>
           </Grid>
-          <Card sx={{ mr: 2 }}>
+          <Card sx={{ mr: 2, width: { xs: '100%', sm: 'auto' } }}>
             <CardContent sx={{ p: 2 }}>
               {employees.length === 0 ? (
                 <Grid
@@ -72,17 +109,54 @@ export default function EmployeeList({ employees, onAddEmployee }: EmployeeListP
                 </Grid>
               ) : (
                 <Grid size={12} sx={{ overflowX: 'auto' }}>
-                  <table style={{ width: '100%', borderCollapse: 'collapse', padding: 10}}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', padding: 10 }}>
                     <thead>
                       <tr>
-                        <th style={{ textAlign: 'left', padding: '12px 16px', color: '#6B7280' }}>Nome</th>
-                        <th style={{ textAlign: 'left', padding: '12px 16px', color: '#6B7280' }}>Email</th>
-                        <th style={{ textAlign: 'left', padding: '12px 16px', color: '#6B7280' }}>Departamento</th>
-                        <th style={{ textAlign: 'left', padding: '12px 16px', color: '#6B7280' }}>Status</th>
+                        <th
+                          onClick={() => handleSort('name')}
+                          style={{ textAlign: 'left', padding: '12px 16px', color: '#6B7280', cursor: 'pointer', userSelect: 'none' }}
+                        >
+                          Nome
+                          <span style={{ marginLeft: 6 }}>
+                            <span style={{ opacity: sortColumn === 'name' && sortDirection === 'asc' ? 1 : 0.3 }}>▲</span>
+                            <span style={{ opacity: sortColumn === 'name' && sortDirection === 'desc' ? 1 : 0.3, marginLeft: 2 }}>▼</span>
+                          </span>
+                        </th>
+
+                        <th
+                          onClick={() => handleSort('email')}
+                          style={{ textAlign: 'left', padding: '12px 16px', color: '#6B7280', cursor: 'pointer', userSelect: 'none' }}
+                        >
+                          Email
+                          <span style={{ marginLeft: 6 }}>
+                            <span style={{ opacity: sortColumn === 'email' && sortDirection === 'asc' ? 1 : 0.3 }}>▲</span>
+                            <span style={{ opacity: sortColumn === 'email' && sortDirection === 'desc' ? 1 : 0.3, marginLeft: 2 }}>▼</span>
+                          </span>
+                        </th>
+                        <th
+                          onClick={() => handleSort('department')}
+                          style={{ textAlign: 'left', padding: '12px 16px', color: '#6B7280', cursor: 'pointer', userSelect: 'none' }}
+                        >
+                          Departamento
+                          <span style={{ marginLeft: 6 }}>
+                            <span style={{ opacity: sortColumn === 'department' && sortDirection === 'asc' ? 1 : 0.3 }}>▲</span>
+                            <span style={{ opacity: sortColumn === 'department' && sortDirection === 'desc' ? 1 : 0.3, marginLeft: 2 }}>▼</span>
+                          </span>
+                        </th>
+                        <th
+                          onClick={() => handleSort('status')}
+                          style={{ textAlign: 'left', padding: '12px 16px', color: '#6B7280', cursor: 'pointer', userSelect: 'none' }}
+                        >
+                          Status
+                          <span style={{ marginLeft: 6 }}>
+                            <span style={{ opacity: sortColumn === 'status' && sortDirection === 'asc' ? 1 : 0.3 }}>▲</span>
+                            <span style={{ opacity: sortColumn === 'status' && sortDirection === 'desc' ? 1 : 0.3, marginLeft: 2 }}>▼</span>
+                          </span>
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
-                      {employees.map((employee) => (
+                      {sortedEmployees.map((employee) => (
                         <tr key={employee.id} style={{ borderTop: '1px solid #e5e7eb' }}>
                           <td style={{ padding: '12px 16px' }}>
                             <Box display="flex" alignItems="center" gap={2}>
