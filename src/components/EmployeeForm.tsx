@@ -13,8 +13,9 @@ import {
 } from "@mui/material";
 import type { EmployeeFormData, FormStep } from "@/types/employee";
 import { useToast } from "@/hooks/use-toast";
-import { ChevronRight, Users, Dot } from "lucide-react";
+import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 import LinearProgressWithLabel from "./LinearProgressWithLabel";
+import Drawer from "./Drawer";
 
 const departments = [
   "Design",
@@ -26,7 +27,7 @@ const departments = [
   "Financeiro",
 ];
 
-export function EmployeeForm({
+export default function EmployeeForm({
   onSubmit,
   onCancel,
 }: {
@@ -113,19 +114,11 @@ export function EmployeeForm({
 
   return (
     // Aba da esquerda
-    <Grid container sx={{p:3}}>
+    <Grid container sx={{ p: 3 }}>
       <Grid size={3}>
-        <Box display={"inline-flex"} alignItems="center" gap={1} mb={2} mt={4}>
-          <Users style={{ width: 22, height: 22 }} />
-          <Typography variant="body1" fontSize={{ xs: 16, sm: 18 }}>
-            Colaboradores
-          </Typography>
-          <ChevronRight style={{ width: 18, height: 18 }} />
-        </Box>
+        <Drawer />
       </Grid>
-
       {/* Aba da direita */}
-      {/* vou colocar tido no centro da tela */}
       <Grid size={8}>
         {/* TO DO: MUDAR COR DO BACKGROUND */}
         {/* Breadcrumb */}
@@ -138,7 +131,7 @@ export function EmployeeForm({
           >
             Colaboradores
           </Typography>
-          <Dot style={{ width: 25, height: 25, color: "#bdbdbd" }} />
+          <ArrowRightAltIcon style={{ width: 25, height: 25, color: "#bdbdbd" }} />
           <Typography variant="body2" color="text.secondary">
             Cadastrar Colaborador
           </Typography>

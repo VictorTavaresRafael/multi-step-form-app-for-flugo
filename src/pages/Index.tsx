@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Header } from '@/components/Header';
-import { EmployeeList } from '@/components/EmployeeList';
-import { EmployeeForm } from '@/components/EmployeeForm';
+import  EmployeeList  from '@/components/EmployeeList';
+import Drawer from '@/components/Drawer';
+import  EmployeeForm  from '@/components/EmployeeForm';
 import { useEmployees } from '@/hooks/useEmployees';
-import { Snackbar, Alert } from '@mui/material';
+import { Snackbar, Alert, Grid } from '@mui/material';
 import type { EmployeeFormData } from '@/types/employee';
 
 type View = 'list' | 'form';
@@ -32,10 +32,8 @@ const Index = () => {
   };
 
   return (
-  <div style={{ minHeight: '100vh', background: '#fafafa' }}>
-      <Header />
-      
-      <main>
+    <Grid container spacing={2} direction="column" style={{ minHeight: '100vh', background: '#fafafa' }}>
+      <Grid size={12} >
         {currentView === 'list' ? (
           <EmployeeList 
             employees={employees as any}
@@ -52,8 +50,8 @@ const Index = () => {
             {snackbar.message}
           </Alert>
         </Snackbar>
-      </main>
-    </div>
+        </Grid>
+    </Grid>
   );
 };
 

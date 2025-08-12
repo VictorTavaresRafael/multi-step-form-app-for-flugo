@@ -1,6 +1,16 @@
 import React from 'react';
-import { Button, Card, CardContent, CardHeader, Avatar, Typography, Chip, Box } from '@mui/material';
-import { ChevronDown, Users } from 'lucide-react';
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Avatar,
+  Typography,
+  Chip,
+  Grid,
+} from '@mui/material';
+import Drawer from "./Drawer";
+import { Users } from 'lucide-react';
 import type { Employee } from '@/types/employee';
 
 interface EmployeeListProps {
@@ -8,8 +18,9 @@ interface EmployeeListProps {
   onAddEmployee: () => void;
 }
 
-export function EmployeeList({ employees, onAddEmployee }: EmployeeListProps) {
+export default function EmployeeList({ employees, onAddEmployee }: EmployeeListProps) {
   const getInitials = (name: string) => {
+    if (!name) return '';
     return name
       .split(' ')
       .map(n => n[0])
@@ -19,75 +30,94 @@ export function EmployeeList({ employees, onAddEmployee }: EmployeeListProps) {
   };
 
   return (
-    <Box p={{ xs: 1, sm: 2, md: 3 }}>
-      {/* Header */}
-      <Box display="flex" flexDirection={{ xs: 'column', sm: 'row' }} alignItems={{ xs: 'stretch', sm: 'center' }} justifyContent="space-between" mb={{ xs: 2, sm: 4 }} gap={{ xs: 2, sm: 0 }}>
-        <Box display="flex" alignItems="center" gap={{ xs: 1, sm: 2 }} color="text.primary" mb={{ xs: 1, sm: 0 }}>
-          <Users style={{ width: 22, height: 22 }} />
-          <Typography variant="body1" fontSize={{ xs: 16, sm: 18 }}>Colaboradores</Typography>
-          <ChevronDown style={{ width: 18, height: 18 }} />
-        </Box>
-        <Typography variant="h5" fontWeight={600} fontSize={{ xs: 18, sm: 24 }}>Colaboradores</Typography>
-        <Button variant="contained" color="success" onClick={onAddEmployee} sx={{ minWidth: { xs: '100%', sm: 160 }, fontSize: { xs: 14, sm: 16 } }}>Novo Colaborador</Button>
-      </Box>
+    <Grid container spacing={2}>
+      {/* Espaço para o Drawer */}
+      <Grid size={2} sx={{ display: { xs: 'none', sm: 'block' } }}>
+        <Drawer />
+      </Grid>
+      <Grid size={10}>
+        <Grid container spacing={2} direction="column" style={{ minHeight: '100vh', background: '#fafafa' }}>
+          {/* Cabeçalho da Seção de Conteúdo */}
+          <Grid size={12} display="flex" flexDirection={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems={{ xs: 'flex-start', sm: 'center' }} sx={{ p: 2 }}>
+            <Typography variant="h4" fontWeight={600} textAlign={"center"} mb={{ xs: 2, sm: 0 }}>
+              Colaboradores
+            </Typography>
+            <Button
+              variant="contained"
+              color="success"
+              onClick={onAddEmployee}
+              sx={{ width: { xs: '100%', sm: 'auto' } }}
+            >
+              Novo Colaborador
+            </Button>
+          </Grid>
+          <Card sx={{ mr: 2 }}>
+            <CardContent sx={{ p: 2 }}>
+              {employees.length === 0 ? (
+                <Grid
+                  container
+                  display="flex"
+                  flexDirection="column"
+                  alignItems="center"
+                  justifyContent="center"
+                  py={{ xs: 4, sm: 8 }}
+                >
+                  <Users style={{ width: 48, height: 64, color: '#bdbdbd', marginBottom: '24px' }} />
+                  <Typography variant="h6" fontWeight={500} mb={1}>
+                    Nenhum colaborador cadastrado
+                  </Typography>
+                  <Typography color="text.secondary" mb={3} textAlign="center">
+                    Comece adicionando seu primeiro colaborador ao sistema.
+                  </Typography>
+                </Grid>
+              ) : (
+                <Grid size={12} sx={{ overflowX: 'auto' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', padding: 10}}>
+                    <thead>
+                      <tr>
+                        <th style={{ textAlign: 'left', padding: '12px 16px', color: '#6B7280' }}>Nome</th>
+                        <th style={{ textAlign: 'left', padding: '12px 16px', color: '#6B7280' }}>Email</th>
+                        <th style={{ textAlign: 'left', padding: '12px 16px', color: '#6B7280' }}>Departamento</th>
+                        <th style={{ textAlign: 'left', padding: '12px 16px', color: '#6B7280' }}>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {employees.map((employee) => (
+                        <tr key={employee.id} style={{ borderTop: '1px solid #e5e7eb' }}>
+                          <td style={{ padding: '12px 16px' }}>
+                            <Box display="flex" alignItems="center" gap={2}>
+                              <Avatar sx={{ width: 32, height: 32, bgcolor: '#10B981', color: '#fff', fontSize: '0.875rem', fontWeight: 600 }}>
+                                {getInitials(employee.name)}
+                              </Avatar>
+                              <Typography variant="body2" fontWeight={500}>{employee.name}</Typography>
+                            </Box>
+                          </td>
+                          <td style={{ padding: '12px 16px' }}>
+                            <Typography variant="body2" color="text.secondary">{employee.email}</Typography>
+                          </td>
+                          <td style={{ padding: '12px 16px' }}>
+                            <Typography variant="body2" color="text.secondary">{employee.department}</Typography>
+                          </td>
+                          <td style={{ padding: '12px 16px' }}>
+                            <Chip
+                              label={employee.status}
+                              color={employee.status === 'Ativo' ? 'success' : 'error'}
+                              size="small"
+                              sx={{ fontWeight: 500 }}
+                            />
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </Grid>
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
 
-      {/* Employee Table */}
-      <Card>
-        <CardHeader />
-        <CardContent>
-          {employees.length === 0 ? (
-            <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" py={{ xs: 4, sm: 10 }}>
-              <Users style={{ width: 48, height: 64, color: '#bdbdbd', marginBottom: 24 }} />
-              <Typography variant="h5" fontWeight={600} mb={2} color="text.primary" fontSize={{ xs: 18, sm: 24 }}>Nenhum colaborador cadastrado</Typography>
-              <Typography color="text.secondary" mb={3} fontSize={{ xs: 15, sm: 18 }}>Comece adicionando seu primeiro colaborador ao sistema.</Typography>
-              <Button variant="contained" color="success" size="large" onClick={onAddEmployee} sx={{ minWidth: { xs: '100%', sm: 240 }, fontWeight: 500, fontSize: { xs: 15, sm: 18 } }}>
-                Adicionar Colaborador
-              </Button>
-            </Box>
-          ) : (
-            <Box sx={{ overflowX: 'auto' }}>
-              <table className="w-full">
-                <thead>
-                  <tr>
-                    <th className="text-left px-2 py-2 text-xs sm:text-base">Nome</th>
-                    <th className="text-left px-2 py-2 text-xs sm:text-base">Email</th>
-                    <th className="text-left px-2 py-2 text-xs sm:text-base">Departamento</th>
-                    <th className="text-left px-2 py-2 text-xs sm:text-base">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {employees.map((employee) => (
-                    <tr key={employee.id} className="border-b">
-                      <td className="px-2 py-2">
-                        <Box display="flex" alignItems="center" gap={2}>
-                          <Avatar sx={{ width: { xs: 32, sm: 40 }, height: { xs: 32, sm: 40 }, bgcolor: '#4caf50', color: '#fff', fontWeight: 600 }}>
-                            {getInitials(employee.name)}
-                          </Avatar>
-                          <Typography fontWeight={500} fontSize={{ xs: 14, sm: 16 }}>{employee.name}</Typography>
-                        </Box>
-                      </td>
-                      <td className="px-2 py-2">
-                        <Typography fontSize={{ xs: 13, sm: 15 }}>{employee.email}</Typography>
-                      </td>
-                      <td className="px-2 py-2">
-                        <Typography fontSize={{ xs: 13, sm: 15 }}>{employee.department}</Typography>
-                      </td>
-                      <td className="px-2 py-2">
-                        <Chip
-                          label={employee.status === 'Ativo' ? 'Ativo' : 'Inativo'}
-                          color={employee.status === 'Ativo' ? 'success' : 'error'}
-                          variant={employee.status === 'Ativo' ? 'filled' : 'outlined'}
-                          sx={{ fontSize: { xs: 12, sm: 14 }, px: { xs: 1, sm: 2 } }}
-                        />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </Box>
-          )}
-        </CardContent>
-      </Card>
-    </Box>
+      {/* Tabela de Colaboradores dentro de um Card */}
+    </Grid>
   );
 }
