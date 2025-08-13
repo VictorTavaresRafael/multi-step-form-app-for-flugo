@@ -38,14 +38,31 @@ export default function PersistentDrawerLeft() {
                     <img src="src/assets/images/logo.png" width="100px" alt="Logo" />
                 </DrawerHeader>
                 <List>
-                    <ListItem key={"Colaboradores"} disablePadding sx={{ display: 'block' }}>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <GroupsIcon />
-                            </ListItemIcon>
-                            <ListItemText primary={"Colaboradores"} /><ChevronRightIcon />
-                        </ListItemButton>
-                    </ListItem>
+                    {['Colaboradores', 'Fornecedores', 'Clientes'].map((text, index) => (
+                        <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+                            <ListItemButton
+                                disabled={text === 'Fornecedores' || text === 'Clientes'}
+                                sx={[
+                                    { minHeight: 48, px: 2.5 },
+                                    open ? { justifyContent: 'initial' } : { justifyContent: 'center' },
+                                ]}
+                            >
+                                <ListItemIcon
+                                    sx={[
+                                        { minWidth: 0, justifyContent: 'center' },
+                                        open ? { mr: 3 } : { mr: 'auto' },
+                                    ]}
+                                >
+                                    <GroupsIcon />
+                                </ListItemIcon>
+                                <ListItemText
+                                    primary={text}
+                                    sx={[open ? { opacity: 1 } : { opacity: 0 }]}
+                                />
+                                <ChevronRightIcon />
+                            </ListItemButton>
+                        </ListItem>
+                    ))}
                 </List>
             </Drawer>
         </Box>
