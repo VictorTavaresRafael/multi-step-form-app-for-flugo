@@ -12,14 +12,17 @@ import {
   Grid,
   Stepper,
   Step,
-  StepLabel
+  StepLabel,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 
 import type { EmployeeFormData, FormStep } from "@/types/employee";
 import { useToast } from "@/hooks/use-toast";
-import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
+import CircleIcon from '@mui/icons-material/Circle';
 import LinearProgressWithLabel from "./LinearProgressWithLabel";
 import Drawer from "./Drawer";
+import Header from "./Header";
 
 const departments = [
   "Design",
@@ -115,17 +118,35 @@ export default function EmployeeForm({
       });
     }
   };
-  const steps = ["Infos Básicas", "Infos Profissionais"];
 
+  const steps = ["Infos Básicas", "Infos Profissionais"];
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     // Aba da esquerda
-    <Grid container sx={{ p: 3 }}>
-      <Grid size={3} sx={{ display: { xs: 'none', sm: 'block' } }}>
-        <Drawer />
+    <Grid
+      container
+      spacing={2}
+      direction="row"
+      sx={{ minHeight: '100vh', background: '#fafafa', display: { xs: 'block', md: 'flex' } }}
+    >
+      {/* Espaço para o Drawer ou Header */}
+      <Grid
+        size={{ xs: 12, md: 2, sm: 12 }}
+      >
+        {/* Header apenas em telas pequenas/médias */}
+        <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+          <Header />
+        </Box>
+
+        {/* Drawer apenas em telas grandes */}
+        <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+          <Drawer />
+        </Box>
       </Grid>
 
-      {/* Aba da direita */}
-      <Grid size={9}>
+      {/* Conteúdo principal */}
+      <Grid size={{ xs: 10, md: 9, sm: 12 }} sx={{ ml: { xs: 0, md: 10 }, alignItems: { xs: 'center', md: 'left' } }}>
         {/* TO DO: MUDAR COR DO BACKGROUND */}
         {/* Breadcrumb */}
         <Box display="flex" alignItems="center" gap={1} mb={0} mt={4}>
@@ -137,7 +158,7 @@ export default function EmployeeForm({
           >
             Colaboradores
           </Typography>
-          <ArrowRightAltIcon style={{ width: 25, height: 25, color: "#bdbdbd" }} />
+          <CircleIcon sx={{ width: 5, height: 5, color: "#bdbdbd" }} />
           <Typography variant="body2" color="text.secondary">
             Cadastrar Colaborador
           </Typography>
@@ -151,23 +172,23 @@ export default function EmployeeForm({
         {/* TO DO: MUDAR FONTE E CORES */}
         <Grid container spacing={4} alignItems="flex-start">
           {/* Stepper */}
-          <Grid size={2}>
+          <Grid size={2} >
             <Stepper
               activeStep={currentStep === "basic" ? 0 : 1}
-              orientation="vertical"
+              orientation={isSmallScreen ? "horizontal" : "vertical"}              
               sx={{
                 mb: 3,
                 "& .MuiStepIcon-root": {
-                  color: "success.main", // etapas não ativas
+                  color: "success.main",
                 },
                 "& .MuiStepIcon-root.Mui-active": {
-                  color: "success.main", // etapa ativa
+                  color: "success.main",
                 },
                 "& .MuiStepIcon-root.Mui-completed": {
-                  color: "success.main", // etapas concluídas
+                  color: "success.main",
                 },
                 "& .MuiStepLabel-label": {
-                  color: "grey.700", // texto
+                  color: "grey.700",
                   fontWeight: 500,
                 },
               }}
@@ -181,7 +202,7 @@ export default function EmployeeForm({
           </Grid>
 
           {/* Conteúdo */}
-          <Grid size={9} >
+          <Grid size={9} sx={{mt: { xs: 6, md: 0 }}}>
             <Typography
               variant="h6"
               fontSize={{ xs: 17, md: 20 }}

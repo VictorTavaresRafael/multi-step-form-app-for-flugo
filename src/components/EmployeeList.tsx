@@ -10,6 +10,7 @@ import {
   Grid,
 } from '@mui/material';
 import Drawer from "./Drawer";
+import Header from './Header';
 import GroupsIcon from '@mui/icons-material/Groups';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import type { Employee } from '@/types/employee';
@@ -53,12 +54,29 @@ export default function EmployeeList({ employees, onAddEmployee }: EmployeeListP
   };
 
   return (
-    <Grid container spacing={2}>
-      {/* Espaço para o Drawer */}
-      <Grid size={2} sx={{ display: { xs: 'none', sm: 'block' } }}>
-        <Drawer />
+    <Grid
+      container
+      spacing={2}
+      direction="row"
+      sx={{ minHeight: '100vh', background: '#fafafa', display: { xs: 'block', md: 'flex' } }}
+    >
+      {/* Espaço para o Drawer ou Header */}
+      <Grid
+        size={{ md: 2, sm: 12 }}
+      >
+        {/* Header apenas em telas pequenas/médias */}
+        <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+          <Header />
+        </Box>
+
+        {/* Drawer apenas em telas grandes */}
+        <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+          <Drawer />
+        </Box>
       </Grid>
-      <Grid size={10}>
+
+      {/* Conteúdo principal */}
+      <Grid size={{ xs: 12, md: 9, sm: 12 }} sx={{ ml: { xs: 0, md: 10 } }}>
         <Grid container spacing={2} direction="column" sx={{ width: { xs: '100%', sm: 'auto' } }}>
           {/* Cabeçalho da Seção de Conteúdo */}
           <Grid size={12} sx={{ p: 2, display: 'flex', justifyContent: 'end' }}>
