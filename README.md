@@ -122,6 +122,10 @@ export const db = getFirestore(app);
 
 ## 🖼 Screenshots
 
+### Lista de Colaboradores (vazia)
+
+![Lista](./prints/lista-colaboradores-vazia.png)
+
 ### Formulário - Etapa 1
 
 ![Etapa 1](./prints/cadastro-colaborador-1.png)
@@ -129,9 +133,7 @@ export const db = getFirestore(app);
 ### Formulário - Etapa 2
 
 ![Etapa 2](./prints/cadastro-colaborador-2.png)
-### Lista de Colaboradores (vazia)
 
-![Lista](./prints/lista-colaboradores-vazia.png)
 
 ### Lista de Colaboradores (preenchida)
 
