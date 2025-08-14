@@ -3,7 +3,6 @@ import { styled, useTheme } from '@mui/material/styles';
 import { useMediaQuery, Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import GroupsIcon from '@mui/icons-material/Groups';
-
 const drawerWidth = 240;
 
 const DrawerHeader = styled('div')(({ theme }) => ({
@@ -17,7 +16,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 export default function PersistentDrawerLeft() {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-    const [open, setOpen] = React.useState(!isMobile);
+    const [open] = React.useState(!isMobile);
 
     return (
         <Box sx={{ display: 'flex' }}>
