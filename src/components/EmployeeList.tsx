@@ -11,8 +11,8 @@ import {
 } from '@mui/material';
 import Drawer from "./Drawer";
 import Header from './Header';
+import HeaderAvatar from './HeaderAvatar';
 import GroupsIcon from '@mui/icons-material/Groups';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import type { Employee } from '@/types/employee';
 
 interface EmployeeListProps {
@@ -58,7 +58,7 @@ export default function EmployeeList({ employees, onAddEmployee }: EmployeeListP
       container
       spacing={2}
       direction="row"
-      sx={{ minHeight: '100vh', background: '#fafafa', display: { xs: 'block', md: 'flex' } }}
+      sx={{ minHeight: '100vh', display: { xs: 'block', md: 'flex' } }}
     >
       {/* Espaço para o Drawer ou Header */}
       <Grid
@@ -79,20 +79,7 @@ export default function EmployeeList({ employees, onAddEmployee }: EmployeeListP
       <Grid size={{ xs: 12, md: 9, sm: 12 }} sx={{ ml: { xs: 0, md: 10 } }}>
         <Grid container spacing={2} direction="column" sx={{ width: { xs: '100%', sm: 'auto' } }}>
           {/* Cabeçalho da Seção de Conteúdo */}
-          <Grid size={12} sx={{ p: 2, display: 'flex', justifyContent: 'end' }}>
-            <Avatar
-              sx={{
-                display: { xs: 'none', sm: 'flex' },
-                bgcolor: 'green',
-                color: '#fff',
-                width: { xs: 28, sm: 32 },
-                height: { xs: 28, sm: 32 },
-                fontSize: { xs: 16, sm: 18 }
-              }}
-            >
-              <AccountCircleIcon style={{ width: 20, height: 20 }} />
-            </Avatar>
-          </Grid>
+          <HeaderAvatar />
           <Grid size={12} display={{ xs: 'block', sm: 'flex' }} flexDirection={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems={{ xs: 'flex-start', sm: 'center' }} sx={{ p: 2, }}>
             <Typography variant="h5" fontWeight={600} textAlign={"center"} mb={{ xs: 2, sm: 0 }} color='black'>
               Colaboradores

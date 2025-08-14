@@ -32,7 +32,7 @@ const Index = () => {
   };
 
   return (
-    <Grid container spacing={2} direction="column" style={{ minHeight: '100vh', background: '#fafafa' }}>
+    <Grid container spacing={2} direction="column" style={{ minHeight: '100vh'}}>
       <Grid size={12} >
         {currentView === 'list' ? (
           <EmployeeList 

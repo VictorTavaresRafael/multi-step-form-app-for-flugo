@@ -23,6 +23,7 @@ import CircleIcon from '@mui/icons-material/Circle';
 import LinearProgressWithLabel from "./LinearProgressWithLabel";
 import Drawer from "./Drawer";
 import Header from "./Header";
+import HeaderAvatar from "./HeaderAvatar";
 
 const departments = [
   "Design",
@@ -128,7 +129,7 @@ export default function EmployeeForm({
       container
       spacing={2}
       direction="row"
-      sx={{ minHeight: '100vh', background: '#fafafa', display: { xs: 'block', md: 'flex' } }}
+      sx={{ minHeight: '100vh', display: { xs: 'block', md: 'flex' } }}
     >
       {/* Espaço para o Drawer ou Header */}
       <Grid
@@ -146,14 +147,14 @@ export default function EmployeeForm({
       </Grid>
 
       {/* Conteúdo principal */}
-      <Grid size={{ xs: 10, md: 9, sm: 12 }} sx={{ ml: { xs: 0, md: 10 }, alignItems: { xs: 'center', md: 'left' } }}>
-        {/* TO DO: MUDAR COR DO BACKGROUND */}
+      <Grid size={{ xs: 10, md: 9, sm: 12 }} sx={{ ml: { xs: 3, md: 10 }, alignItems: { xs: 'center', md: 'left' } }}>
+        <HeaderAvatar />
         {/* Breadcrumb */}
         <Box display="flex" alignItems="center" gap={1} mb={0} mt={4}>
           <Typography
             variant="body2"
             color="text.secondary"
-            sx={{ cursor: "pointer", fontWeight: 600 }}
+            sx={{ cursor: "pointer", fontWeight: 600, ml: { xs: 3, md: 0 }  }}
             onClick={() => onCancel()}
           >
             Colaboradores
@@ -167,7 +168,7 @@ export default function EmployeeForm({
           variant="determinate"
           value={currentStep === "basic" ? 0 : 50}
           color="success"
-          sx={{ mb: 2, height: 6, borderRadius: 4 }}
+          sx={{ mb: 2, height: 6, borderRadius: 4, ml: { xs: 6, md: 0 } }}
         />
         {/* TO DO: MUDAR FONTE E CORES */}
         <Grid container spacing={4} alignItems="flex-start">
@@ -175,9 +176,8 @@ export default function EmployeeForm({
           <Grid size={2} >
             <Stepper
               activeStep={currentStep === "basic" ? 0 : 1}
-              orientation={isSmallScreen ? "horizontal" : "vertical"}              
-              sx={{
-                mb: 3,
+              orientation={isSmallScreen ? "horizontal" : "vertical"}
+              sx={{ gap: { xs: 2, md: 4 }, mb: 3, ml: { xs: 3, md: 0 },
                 "& .MuiStepIcon-root": {
                   color: "success.main",
                 },
@@ -202,7 +202,7 @@ export default function EmployeeForm({
           </Grid>
 
           {/* Conteúdo */}
-          <Grid size={9} sx={{mt: { xs: 6, md: 0 }}}>
+          <Grid size={9} sx={{ mt: { xs: 6, md: 0 } }}>
             <Typography
               variant="h6"
               fontSize={{ xs: 17, md: 20 }}
