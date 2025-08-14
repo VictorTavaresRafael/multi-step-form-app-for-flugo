@@ -34,7 +34,7 @@ export default function PersistentDrawerLeft() {
                 open={open}
             >
                 <DrawerHeader sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <img src="public/logo.png" width="100px" alt="Logo" />
+                    <img src="/logo.png" width="100px" alt="Logo" />
                 </DrawerHeader>
                 <List>
                     {['Colaboradores', 'Fornecedores', 'Clientes'].map((text, index) => (
